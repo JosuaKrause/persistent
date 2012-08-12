@@ -22,7 +22,7 @@ public class PersistentTest {
   /** Tests whether the correct types are created. */
   @Test
   public void testCorrectTypes() {
-    assertEquals(Persistent.from(), Persistent.empty());
+    assertEquals(Persistent.from(), Persistent.emptySequence());
     assertTrue(Persistent.from(1, 2, 3) instanceof ArraySequence);
     final Collection<Integer> col = new ArrayList<Integer>();
     col.add(1);

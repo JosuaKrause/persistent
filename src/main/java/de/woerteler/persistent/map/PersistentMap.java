@@ -85,29 +85,6 @@ public interface PersistentMap<K, V> {
   PersistentSequence<V> valueSequence();
 
   /**
-   * A key value pair from a persistent map.
-   * 
-   * @author Joschi <josua.krause@googlemail.com>
-   * @param <K> The key type.
-   * @param <V> The value type.
-   */
-  interface PersistentEntry<K, V> {
-
-    /**
-     * Getter.
-     * @return The key.
-     */
-    K getKey();
-
-    /**
-     * Getter.
-     * @return The value.
-     */
-    V getValue();
-
-  }
-
-  /**
    * Returns a sequence of all entries in an arbitrary order.
    * 
    * @return A sequence of all entries.

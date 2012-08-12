@@ -46,7 +46,7 @@ public class ArraySequenceTest {
    */
   @Test
   public void emptySeqCache() {
-    final PersistentSequence<Object> e = Persistent.empty();
+    final PersistentSequence<Object> e = Persistent.emptySequence();
     assertTrue(e == ArraySequence.from());
     assertTrue(e == ArraySequence.from(new ArrayList<Object>()));
     assertTrue(e == TrieSequence.from());

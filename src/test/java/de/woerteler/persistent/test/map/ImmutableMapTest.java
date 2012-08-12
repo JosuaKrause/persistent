@@ -15,8 +15,8 @@ import org.junit.Test;
 import de.woerteler.persistent.Persistent;
 import de.woerteler.persistent.PersistentSequence;
 import de.woerteler.persistent.map.ImmutableMap;
+import de.woerteler.persistent.map.PersistentEntry;
 import de.woerteler.persistent.map.PersistentMap;
-import de.woerteler.persistent.map.PersistentMap.PersistentEntry;
 
 /**
  * Tests for the {@link ImmutableMap} data structure.
@@ -71,9 +71,9 @@ public class ImmutableMapTest {
     assertSame("delete", map, map.remove(123));
     assertNull("lookup", map.get(123));
     assertFalse(map.containsKey(42));
-    assertTrue(map.keySequence() == (PersistentSequence<?>) Persistent.empty());
-    assertTrue(map.valueSequence() == (PersistentSequence<?>) Persistent.empty());
-    assertTrue(map.entrySequence() == (PersistentSequence<?>) Persistent.empty());
+    assertTrue(map.keySequence() == (PersistentSequence<?>) Persistent.emptySequence());
+    assertTrue(map.valueSequence() == (PersistentSequence<?>) Persistent.emptySequence());
+    assertTrue(map.entrySequence() == (PersistentSequence<?>) Persistent.emptySequence());
   }
 
   /** Test for sequentially inserting elements. */

@@ -1,6 +1,11 @@
 package de.woerteler.persistent;
 
 import java.util.Collection;
+import java.util.Map;
+
+import de.woerteler.persistent.map.ImmutableMap;
+import de.woerteler.persistent.map.PersistentHashMap;
+import de.woerteler.persistent.map.PersistentMap;
 
 /**
  * Handles the creation of immutable sequences.
@@ -21,8 +26,19 @@ public final class Persistent {
    * @param <E> The type of the sequence.
    * @return The empty sequence.
    */
-  public static <E> PersistentSequence<E> empty() {
+  public static <E> PersistentSequence<E> emptySequence() {
     return TrieSequence.empty();
+  }
+
+  /**
+   * Returns the empty map.
+   * 
+   * @param <K> The key type.
+   * @param <V> The value type.
+   * @return The empty map.
+   */
+  public static <K, V> PersistentMap<K, V> emptyMap() {
+    return ImmutableMap.empty();
   }
 
   /**
@@ -57,6 +73,31 @@ public final class Persistent {
    */
   public static <E> PersistentSequence<E> from(final Collection<E> c) {
     return ArraySequence.from(c);
+  }
+
+  /**
+   * Creates a persistent map from a regular map.
+   * 
+   * @param <K> The key type.
+   * @param <V> The value type.
+   * @param map The regular map.
+   * @return The persistent map.
+   */
+  public static <K, V> PersistentMap<K, V> from(final Map<K, V> map) {
+    return PersistentHashMap.from(map);
+  }
+
+  /**
+   * Creates a singleton persistent map.
+   * 
+   * @param <K> The key type.
+   * @param <V> The value type.
+   * @param key The key.
+   * @param value The value.
+   * @return The singleton map.
+   */
+  public static <K, V> PersistentMap<K, V> singleton(final K key, final V value) {
+    return ImmutableMap.singleton(key, value);
   }
 
 }

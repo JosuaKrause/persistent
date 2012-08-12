@@ -235,7 +235,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
   public PersistentSequence<K> keySequence() {
     final TrieNode r = root;
     final int size = r.size;
-    if(size == 0) return Persistent.empty();
+    if(size == 0) return Persistent.emptySequence();
     return new FlatSequence<K>() {
 
       @Override
@@ -268,7 +268,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
   public PersistentSequence<V> valueSequence() {
     final TrieNode r = root;
     final int size = r.size;
-    if(size == 0) return Persistent.empty();
+    if(size == 0) return Persistent.emptySequence();
     return new FlatSequence<V>() {
 
       @Override
@@ -297,63 +297,11 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
     };
   }
 
-  /**
-   * A simple implementation of the {@link PersistentMap.PersistentEntry}
-   * interface.
-   * 
-   * @author Joschi <josua.krause@googlemail.com>
-   * @param <K> The key type.
-   * @param <V> The value type.
-   */
-  static class PEntry<K, V> implements PersistentEntry<K, V> {
-
-    /** The key. */
-    private final K key;
-    /** The value. */
-    private final V value;
-
-    /**
-     * An entry.
-     * 
-     * @param key The key.
-     * @param value The value.
-     */
-    public PEntry(final K key, final V value) {
-      this.key = key;
-      this.value = value;
-    }
-
-    @Override
-    public K getKey() {
-      return key;
-    }
-
-    @Override
-    public V getValue() {
-      return value;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-      if(obj == this) return true;
-      if(!(obj instanceof PersistentEntry)) return false;
-      final PersistentEntry<?, ?> e = (PersistentEntry<?, ?>) obj;
-      return TrieNode.equal(key, e.getKey()) && TrieNode.equal(value, e.getValue());
-    }
-
-    @Override
-    public int hashCode() {
-      return (key == null ? 1 : key.hashCode()) * 31
-          + (value == null ? 1 : value.hashCode());
-    }
-
-  }
-
   @Override
   public PersistentSequence<PersistentEntry<K, V>> entrySequence() {
     final TrieNode r = root;
     final int size = r.size;
-    if(size == 0) return Persistent.empty();
+    if(size == 0) return Persistent.emptySequence();
     return new FlatSequence<PersistentEntry<K, V>>() {
 
       @Override
@@ -361,20 +309,19 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
         return new PersistentIterator<PersistentEntry<K, V>>(r) {
 
           @Override
-          protected PersistentEntry<K, V> convertNode(
-              final TrieNode node, final int pos) {
-            return new PEntry<K, V>((K) node.getKey(pos), (V) node.getValue(pos));
+          protected PersistentEntry<K, V> convertNode(final TrieNode node, final int pos) {
+            return new PersistentEntry<K, V>((K) node.getKey(pos), (V) node.getValue(pos));
           }
 
         };
       }
 
       @Override
-      public PEntry<K, V> get(final int pos) {
+      public PersistentEntry<K, V> get(final int pos) {
         final Pos p = new Pos(pos);
         final TrieNode at = getNodeAt(p);
         final int np = p.pos;
-        return new PEntry<K, V>((K) at.getKey(np), (V) at.getValue(np));
+        return new PersistentEntry<K, V>((K) at.getKey(np), (V) at.getValue(np));
       }
 
       @Override

@@ -123,7 +123,7 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
         (PersistentEntry<K, V>[]) new PersistentEntry<?, ?>[set.size()];
         int i = 0;
         for(final Entry<K, V> e : set) {
-          tmp[i++] = new ImmutableMap.PEntry<K, V>(e.getKey(), e.getValue());
+          tmp[i++] = new PersistentEntry<K, V>(e.getKey(), e.getValue());
         }
         arr = tmp;
       }
@@ -148,7 +148,7 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
           @Override
           public PersistentEntry<K, V> next() {
             final Entry<K, V> e = it.next();
-            return new ImmutableMap.PEntry<K, V>(e.getKey(), e.getValue());
+            return new PersistentEntry<K, V>(e.getKey(), e.getValue());
           }
 
           @Override

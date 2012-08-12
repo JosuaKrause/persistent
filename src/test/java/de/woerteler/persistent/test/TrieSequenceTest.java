@@ -252,7 +252,7 @@ public class TrieSequenceTest {
 
         cas = a123.append(s456), caa = a123.append(a456),
 
-        e = Persistent.empty(),
+        e = Persistent.emptySequence(),
 
         es = e.append(s123), se = s123.append(e),
 
