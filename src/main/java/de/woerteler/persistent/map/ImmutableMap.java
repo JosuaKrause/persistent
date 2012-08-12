@@ -305,7 +305,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
    * @param <K> The key type.
    * @param <V> The value type.
    */
-  private static class PEntry<K, V> implements PersistentEntry<K, V> {
+  static class PEntry<K, V> implements PersistentEntry<K, V> {
 
     /** The key. */
     private final K key;
