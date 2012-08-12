@@ -22,7 +22,7 @@ public final class ArraySequence<E> extends FlatSequence<E> {
    */
   public static <E> PersistentSequence<E> from(final E... array) {
     if(array.length == 0) return TrieSequence.empty();
-    return new ArraySequence<E>(array.clone());
+    return new ArraySequence<E>(Arrays.copyOf(array, array.length));
   }
 
   /**
@@ -80,7 +80,7 @@ public final class ArraySequence<E> extends FlatSequence<E> {
 
   @Override
   public Object[] toArray() {
-    return array.clone();
+    return Arrays.copyOf(array, array.length);
   }
 
   @Override
