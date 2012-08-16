@@ -478,7 +478,7 @@ public class ImmutableMapTest {
 
   /** Tests the {@link ImmutableMap#from(Map)} method. */
   @Test public void fromMap() {
-    assertSame(ImmutableMap.EMPTY, ImmutableMap.from(Collections.emptyMap()));
+    assertSame(Persistent.emptyMap(), ImmutableMap.from(Collections.emptyMap()));
     assertEquals("leaf", mapFrom(0), ImmutableMap.from(utilMap(0, 0)));
     assertEquals("leaf null", mapFromPairs(0, null), ImmutableMap.from(utilMap(0, null)));
     assertEquals("list", mapFrom(0, 0L), ImmutableMap.from(utilMap(0, 0, 0L, 0L)));

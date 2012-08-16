@@ -72,11 +72,11 @@ public final class Performance {
     final long test0 = startTest();
     reads(Persistent.from(content), reads);
     final double time0 = endTest(test0);
-    printResult("build" + contentSize, "array", time0);
+    printResult("reads" + contentSize, "array", time0);
     final long test1 = startTest();
     reads(TrieSequence.from(content), reads);
     final double time1 = endTest(test1);
-    printResult("build" + contentSize, "trie ", time1);
+    printResult("reads" + contentSize, "trie ", time1);
   }
 
   /**

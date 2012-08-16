@@ -189,7 +189,7 @@ public class TrieSequenceTest {
 
   /** Tests {@link TrieSequence#equals(Object)} and {@link TrieSequence#hashCode()}. */
   @Test public void testEquals() {
-    assertTrue(equalsWithHash(TrieSequence.EMPTY, TrieSequence.from()));
+    assertTrue(equalsWithHash(Persistent.emptySequence(), TrieSequence.from()));
     assertTrue(equalsWithHash(TrieSequence.from(1, 2, 3), TrieSequence.from(1, 2, 3)));
     assertTrue(equalsWithHash(TrieSequence.from(range(0, TrieSequence.SIZE)),
         TrieSequence.from(range(0, TrieSequence.SIZE))));
@@ -258,7 +258,7 @@ public class TrieSequenceTest {
 
         ea = e.append(a123), ae = a123.append(e)
 
-    /* end of definition */;
+        /* end of definition */;
     assertTrue(equalsWithHash(es, s123));
     assertTrue(equalsWithHash(se, es));
     assertTrue(equalsWithHash(ea, se));

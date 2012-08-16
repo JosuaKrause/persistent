@@ -1,6 +1,7 @@
 package de.woerteler.persistent.map;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.woerteler.persistent.PersistentSequence;
 
@@ -12,7 +13,25 @@ import de.woerteler.persistent.PersistentSequence;
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public interface PersistentMap<K, V> {
+public abstract class PersistentMap<K, V> {
+
+  /** The unique empty map. */
+  public static final PersistentMap<?, ?> EMPTY = ImmutableMap.EMPTY_MAP;
+
+  /** The fix size of this persistent map. */
+  protected final int size;
+
+  /**
+   * Creates a persistent map with the given size.
+   * 
+   * @param size The number of entries in the map.
+   */
+  public PersistentMap(final int size) {
+    if(size < 0) throw new IllegalArgumentException("size is negative: " + size);
+    if(size == 0 && EMPTY != null) throw new IllegalStateException(
+        "non unique empty sequence");
+    this.size = size;
+  }
 
   /**
    * Inserts the given value into this map.
@@ -21,7 +40,7 @@ public interface PersistentMap<K, V> {
    * @param value value to insert
    * @return updated map if changed, {@code this} otherwise
    */
-  PersistentMap<K, V> put(final K key, final V value);
+  public abstract PersistentMap<K, V> put(final K key, final V value);
 
   /**
    * Gets the value from this map.
@@ -29,14 +48,16 @@ public interface PersistentMap<K, V> {
    * @param key key to look for
    * @return bound value if found, the empty sequence {@code ()} otherwise
    */
-  V get(K key);
+  public abstract V get(K key);
 
   /**
    * Number of key/value-pairs contained in this map.
    * 
    * @return size
    */
-  int size();
+  public final int size() {
+    return size;
+  }
 
   /**
    * Checks if the given key exists in the map.
@@ -44,7 +65,7 @@ public interface PersistentMap<K, V> {
    * @param key key to look for
    * @return {@code true()}, if the key exists, {@code false()} otherwise
    */
-  boolean containsKey(K key);
+  public abstract boolean containsKey(K key);
 
   /**
    * Deletes a key from this map.
@@ -52,7 +73,7 @@ public interface PersistentMap<K, V> {
    * @param key key to delete
    * @return updated map if changed, {@code this} otherwise
    */
-  PersistentMap<K, V> remove(K key);
+  public abstract PersistentMap<K, V> remove(K key);
 
   /**
    * Adds all bindings from the given map into {@code this}.
@@ -60,7 +81,13 @@ public interface PersistentMap<K, V> {
    * @param other map to add
    * @return updated map if changed, {@code this} otherwise
    */
-  PersistentMap<K, V> putAll(PersistentMap<K, V> other);
+  public PersistentMap<K, V> putAll(final PersistentMap<K, V> other) {
+    PersistentMap<K, V> res = this;
+    for(final PersistentEntry<K, V> e : other.entrySequence()) {
+      res = res.put(e.getKey(), e.getValue());
+    }
+    return res;
+  }
 
   /**
    * Adds all bindings from the given map into {@code this}.
@@ -68,27 +95,59 @@ public interface PersistentMap<K, V> {
    * @param other map to add
    * @return updated map if changed, {@code this} otherwise
    */
-  PersistentMap<K, V> putAll(Map<? extends K, ? extends V> other);
+  public PersistentMap<K, V> putAll(final Map<? extends K, ? extends V> other) {
+    PersistentMap<K, V> res = this;
+    for(final Entry<? extends K, ? extends V> e : other.entrySet()) {
+      res = res.put(e.getKey(), e.getValue());
+    }
+    return res;
+  }
 
   /**
    * Returns a sequence of all keys in an arbitrary order.
    * 
    * @return A sequence of all keys.
    */
-  PersistentSequence<K> keySequence();
+  public abstract PersistentSequence<K> keySequence();
 
   /**
    * Returns a sequence of all values in an arbitrary order.
    * 
    * @return A sequence of all values.
    */
-  PersistentSequence<V> valueSequence();
+  public abstract PersistentSequence<V> valueSequence();
 
   /**
    * Returns a sequence of all entries in an arbitrary order.
    * 
    * @return A sequence of all entries.
    */
-  PersistentSequence<PersistentEntry<K, V>> entrySequence();
+  public abstract PersistentSequence<PersistentEntry<K, V>> entrySequence();
+
+  @Override
+  public boolean equals(final Object obj) {
+    if(obj == this) return true;
+    if(!(obj instanceof PersistentMap)) return false;
+    @SuppressWarnings("unchecked")
+    final PersistentMap<Object, Object> other = (PersistentMap<Object, Object>) obj;
+    if(size() != other.size()) return false;
+    for(final K key : keySequence()) {
+      if(!other.containsKey(key)) return false;
+      final V value = get(key);
+      final Object o = other.get(key);
+      if(value == null) {
+        if(o != null) return false;
+      } else {
+        if(!value.equals(o)) return false;
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    throw new UnsupportedOperationException(
+        "find hash code compatible with immutable map");
+  }
 
 }

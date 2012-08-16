@@ -19,9 +19,9 @@ import de.woerteler.persistent.map.TrieNode.Pos;
  * @param <K> key type
  * @param <V> value type
  */
-public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
+public final class ImmutableMap<K, V> extends PersistentMap<K, V> {
   /** The empty map. */
-  public static final ImmutableMap<?, ?> EMPTY =
+  static final ImmutableMap<?, ?> EMPTY_MAP =
       new ImmutableMap<Object, Object>(TrieNode.EMPTY);
   /** Number of bits per level, maximum is 5 because {@code 1 << 5 == 32}. */
   public static final int BITS = 5;
@@ -34,6 +34,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
    * @param m map
    */
   private ImmutableMap(final TrieNode m) {
+    super(m.size);
     root = m;
   }
 
@@ -45,7 +46,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
    */
   @SuppressWarnings("unchecked")
   public static <K, V> ImmutableMap<K, V> empty() {
-    return (ImmutableMap<K, V>) EMPTY;
+    return (ImmutableMap<K, V>) EMPTY_MAP;
   }
 
   /**
@@ -57,7 +58,8 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
    * @return empty map
    */
   public static <K, V> ImmutableMap<K, V> singleton(final K key, final V value) {
-    return new ImmutableMap<K, V>(TrieNode.EMPTY.insert(key.hashCode(), key, value, 0));
+    return new ImmutableMap<K, V>(
+        TrieNode.EMPTY.insert(key.hashCode(), key, value, 0));
   }
 
   /**
@@ -90,7 +92,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
 
   @Override
   public PersistentMap<K, V> putAll(final PersistentMap<K, V> other) {
-    if(this == EMPTY) return other;
+    if(this == EMPTY_MAP) return other;
     if(!(other instanceof ImmutableMap)) return super.putAll(other);
     final ImmutableMap<K, V> o = (ImmutableMap<K, V>) other;
     final TrieNode upd = root.addAll(o.root, 0);
@@ -110,11 +112,6 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
   public ImmutableMap<K, V> put(final K key, final V value) {
     return new ImmutableMap<K, V>(root.insert(key == null ? 0 : key.hashCode(), key,
         value, 0));
-  }
-
-  @Override
-  public int size() {
-    return root.size;
   }
 
   /**

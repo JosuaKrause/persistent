@@ -19,7 +19,7 @@ import de.woerteler.persistent.PersistentSequence;
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
+public final class PersistentHashMap<K, V> extends PersistentMap<K, V> {
 
   /**
    * Creates a persistent view of the given map.
@@ -64,6 +64,7 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
    * @param map The map. Will not be copied.
    */
   private PersistentHashMap(final Map<K, V> map) {
+    super(map.size());
     this.map = map;
   }
 
@@ -75,11 +76,6 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
   @Override
   public V get(final K key) {
     return map.get(key);
-  }
-
-  @Override
-  public int size() {
-    return map.size();
   }
 
   @Override

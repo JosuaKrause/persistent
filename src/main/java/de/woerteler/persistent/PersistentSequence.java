@@ -14,11 +14,11 @@ import java.util.RandomAccess;
  */
 public abstract class PersistentSequence<E> implements Iterable<E>, RandomAccess {
 
-  /** The empty sequence. */
+  /** The unique empty sequence. */
   public static final PersistentSequence<?> EMPTY = TrieSequence.EMPTY_SEQUENCE;
 
   /** The fix size of this persistent sequence. */
-  private final int size;
+  protected final int size;
 
   /**
    * Creates a persistent sequence.
