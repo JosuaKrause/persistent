@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author Leo Woerteler
  * @param <T> type of the values in this collection
  */
-public final class TrieSequence<T> extends AbstractSequence<T> {
+public final class TrieSequence<T> extends PersistentSequence<T> {
   /** Root node. */
   private final Node root;
 
@@ -23,7 +23,7 @@ public final class TrieSequence<T> extends AbstractSequence<T> {
   private static final int LAST = SIZE - 1;
 
   /** the empty sequence. */
-  public static final TrieSequence<?> EMPTY =
+  static final TrieSequence<?> EMPTY_SEQUENCE =
       new TrieSequence<Object>(null, new Object[0]);
 
   /** Insertion buffer. */
@@ -35,6 +35,7 @@ public final class TrieSequence<T> extends AbstractSequence<T> {
    * @param ch cache
    */
   private TrieSequence(final Node r, final Object[] ch) {
+    super((r == null ? 0 : r.size * SIZE) + ch.length);
     root = r;
     cache = ch;
   }
@@ -113,11 +114,6 @@ public final class TrieSequence<T> extends AbstractSequence<T> {
   }
 
   @Override
-  public int size() {
-    return (root == null ? 0 : root.size * SIZE) + cache.length;
-  }
-
-  @Override
   public TrieSequence<T> add(final T it) {
     final int cl = cache.length;
     final Object[] newCache = new Object[cl + 1];
@@ -130,7 +126,7 @@ public final class TrieSequence<T> extends AbstractSequence<T> {
     if(cl < LAST) return new TrieSequence<T>(root, newCache);
     // insert the full cache into the tree
     final Node l = new Node(newCache);
-    return new TrieSequence<T>(root == null ? l : root.insert(l), EMPTY.cache);
+    return new TrieSequence<T>(root == null ? l : root.insert(l), EMPTY_SEQUENCE.cache);
   }
 
   @Override

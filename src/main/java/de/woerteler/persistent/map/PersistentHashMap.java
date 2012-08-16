@@ -105,7 +105,7 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
   @Override
   public PersistentSequence<PersistentEntry<K, V>> entrySequence() {
     final Set<Entry<K, V>> set = map.entrySet();
-    return new FlatSequence<PersistentEntry<K, V>>() {
+    return new FlatSequence<PersistentEntry<K, V>>(set.size()) {
 
       private PersistentEntry<K, V>[] arr;
 
@@ -126,11 +126,6 @@ public final class PersistentHashMap<K, V> extends AbstractPersistentMap<K, V> {
           tmp[i++] = new PersistentEntry<K, V>(e.getKey(), e.getValue());
         }
         arr = tmp;
-      }
-
-      @Override
-      public int size() {
-        return set.size();
       }
 
       @Override

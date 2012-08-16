@@ -11,7 +11,16 @@ import java.util.Arrays;
  * @author Joschi <josua.krause@googlemail.com>
  * @param <T> The content type.
  */
-public abstract class FlatSequence<T> extends AbstractSequence<T> {
+public abstract class FlatSequence<T> extends PersistentSequence<T> {
+
+  /**
+   * Creates a flat persistent sequence.
+   * 
+   * @param size The size of the sequence.
+   */
+  public FlatSequence(final int size) {
+    super(size);
+  }
 
   /** A soft reference to the converted sequence. */
   // maybe use SoftReference here to ensure longer live-span

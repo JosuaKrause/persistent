@@ -22,7 +22,7 @@ public final class ArraySequence<E> extends FlatSequence<E> {
    */
   public static <E> PersistentSequence<E> from(final E... array) {
     if(array.length == 0) return TrieSequence.empty();
-    return new ArraySequence<E>(Arrays.copyOf(array, array.length));
+    return new ArraySequence<E>(copy(array));
   }
 
   /**
@@ -39,6 +39,17 @@ public final class ArraySequence<E> extends FlatSequence<E> {
     return new ArraySequence<E>((E[]) arr);
   }
 
+  /**
+   * Copies the input array.
+   * 
+   * @param <T> The array type.
+   * @param array The array.
+   * @return The copy of the array.
+   */
+  private static <T> T[] copy(final T[] array) {
+    return Arrays.copyOf(array, array.length);
+  }
+
   /** The internal array. */
   protected final E[] array;
 
@@ -48,6 +59,7 @@ public final class ArraySequence<E> extends FlatSequence<E> {
    * @param array The array that is not copied.
    */
   private ArraySequence(final E[] array) {
+    super(array.length);
     this.array = array;
   }
 
@@ -74,13 +86,8 @@ public final class ArraySequence<E> extends FlatSequence<E> {
   }
 
   @Override
-  public int size() {
-    return array.length;
-  }
-
-  @Override
   public Object[] toArray() {
-    return Arrays.copyOf(array, array.length);
+    return copy(array);
   }
 
   @Override

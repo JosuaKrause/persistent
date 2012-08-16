@@ -236,7 +236,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
     final TrieNode r = root;
     final int size = r.size;
     if(size == 0) return Persistent.emptySequence();
-    return new FlatSequence<K>() {
+    return new FlatSequence<K>(size) {
 
       @Override
       public Iterator<K> iterator() {
@@ -256,11 +256,6 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
         return (K) getNodeAt(p).getKey(p.pos);
       }
 
-      @Override
-      public int size() {
-        return size;
-      }
-
     };
   }
 
@@ -269,7 +264,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
     final TrieNode r = root;
     final int size = r.size;
     if(size == 0) return Persistent.emptySequence();
-    return new FlatSequence<V>() {
+    return new FlatSequence<V>(size) {
 
       @Override
       public Iterator<V> iterator() {
@@ -289,11 +284,6 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
         return (V) getNodeAt(p).getValue(p.pos);
       }
 
-      @Override
-      public int size() {
-        return size;
-      }
-
     };
   }
 
@@ -302,7 +292,7 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
     final TrieNode r = root;
     final int size = r.size;
     if(size == 0) return Persistent.emptySequence();
-    return new FlatSequence<PersistentEntry<K, V>>() {
+    return new FlatSequence<PersistentEntry<K, V>>(size) {
 
       @Override
       public Iterator<PersistentEntry<K, V>> iterator() {
@@ -322,11 +312,6 @@ public final class ImmutableMap<K, V> extends AbstractPersistentMap<K, V> {
         final TrieNode at = getNodeAt(p);
         final int np = p.pos;
         return new PersistentEntry<K, V>((K) at.getKey(np), (V) at.getValue(np));
-      }
-
-      @Override
-      public int size() {
-        return size;
       }
 
     };
