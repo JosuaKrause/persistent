@@ -1,5 +1,7 @@
 package de.woerteler.persistent.test;
 
+import java.util.Iterator;
+
 import de.woerteler.persistent.Persistent;
 import de.woerteler.persistent.PersistentSequence;
 import de.woerteler.persistent.TrieSequence;
@@ -56,6 +58,12 @@ public final class Performance {
     reading(10, 1000000);
     reading(1000, 1000000);
     reading(1000000, 1000000);
+    iterate(0, 1000);
+    iterate(1, 1000);
+    iterate(10, 1000);
+    iterate(1000, 1000);
+    iterate(1000000, 1000);
+    iterate(10000000, 50);
   }
 
   /**
@@ -121,6 +129,42 @@ public final class Performance {
     adds(seq1, insertSize);
     final double time1 = endTest(test1);
     printResult("itwic" + contentSize, "trie ", time1);
+  }
+
+  /**
+   * Tests iteration over the sequence.
+   * 
+   * @param contentSize The size.
+   * @param numIt The number of full iterations.
+   */
+  private static void iterate(final int contentSize,
+      final int numIt) {
+    final Object[] content = new Object[contentSize];
+    for(int i = 0; i < content.length; ++i) {
+      content[i] = new Object();
+    }
+    final long test0 = startTest();
+    final PersistentSequence<Object> seq0 = Persistent.from(content);
+    for(int i = 0; i < numIt; ++i) {
+      final Iterator<Object> it = seq0.iterator();
+      while(it.hasNext()) {
+        final Object o = it.next();
+        if(o == null) throw new NullPointerException();
+      }
+    }
+    final double time0 = endTest(test0);
+    printResult("iter " + contentSize, "array", time0);
+    final long test1 = startTest();
+    final PersistentSequence<Object> seq1 = TrieSequence.from(content);
+    for(int i = 0; i < numIt; ++i) {
+      final Iterator<Object> it = seq1.iterator();
+      while(it.hasNext()) {
+        final Object o = it.next();
+        if(o == null) throw new NullPointerException();
+      }
+    }
+    final double time1 = endTest(test1);
+    printResult("iter " + contentSize, "trie ", time1);
   }
 
   /**
@@ -207,8 +251,10 @@ public final class Performance {
     if(!dryRun) {
       System.out.println(name + "[" + test + "]: " + time + "ms");
     }
-    System.gc();
-    System.runFinalization();
+    for(int i = 0; i < 5; ++i) {
+      System.gc();
+      System.runFinalization();
+    }
   }
 
 }
